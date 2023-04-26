@@ -12,7 +12,7 @@ We use [eth-crypto](https://www.npmjs.com/package/eth-crypto) package to encrypt
 * Set `INFURA_API_KEY` to the Infura API key in `.env`
 * Set `COINMARKETCAP_API_KEY` to the CoinMarketCap API key in `.env`, if needed
 * Set `ETHERSCAN_API_KEY` to the Etherscan API key in `.env`, if needed
-* Set the environment variables in every `.env` file. These variables are used to deploy the smart contracts to the network.
+* Set the rest environment variables in `.env` file. These variables are used to deploy the smart contracts to the network.
 
 ### Install dependencies
 
