@@ -41,6 +41,10 @@ yarn deploy --network {network}
 
 You can see the deployment address of the smart contracts in the [deployments/goerli](deployments/goerli) and [deployments/mainnet](deployments/mainnet) folders. For every deployed smart contract you will find a `<smart_contract>.json` JSON file with the address in the `"address"` field.
 
+## Gas cost
+
+![Gas cost](gascost.png)
+
 ## Zero-Knowledge Proof
 
 Zero-knowledge proof is a method by which one party (the prover) can prove to another party (the verifier) that the prover knows a value x that fulfills some constraints without revealing any information apart from the fact that he/she knows the value x.
