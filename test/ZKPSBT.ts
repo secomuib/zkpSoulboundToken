@@ -128,7 +128,7 @@ describe("ZKP SBT", () => {
         );
       const mintReceipt = await mintTx.wait();
 
-      const toAddress = mintReceipt.events![1].args![1];
+      const toAddress = mintReceipt.events![0].args![0];
 
       expect(toAddress).to.equal(address1.address);
     });
