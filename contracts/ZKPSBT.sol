@@ -1,20 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-import "./SBT/SBT.sol";
+import "./eip-4671/ERC4671.sol";
 
 /// @title ZKP SBT
 /// @author Miquel A. Cabot
 /// @notice Soulbound token implementing ZKP
 /// @dev Inherits from the SSBT contract
-contract ZKPSBT is SBT {
+contract ZKPSBT is ERC4671, Ownable {
     /* ========== STATE VARIABLES =========================================== */
-
-    using Counters for Counters.Counter;
-
-    Counters.Counter private _tokenIdCounter;
 
     struct EncryptedData {
         bytes iv; // IV
@@ -46,21 +42,11 @@ contract ZKPSBT is SBT {
         address admin,
         string memory name,
         string memory symbol
-    ) SBT(name, symbol) {
+    ) ERC4671(name, symbol) {
         Ownable.transferOwnership(admin);
     }
 
     /* ========== RESTRICTED FUNCTIONS ====================================== */
-
-    function _mintWithCounter(
-        address to
-    ) internal virtual onlyOwner returns (uint256) {
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
-        _mint(to, tokenId);
-
-        return tokenId;
-    }
 
     /* ========== MUTATIVE FUNCTIONS ======================================== */
 
@@ -78,8 +64,8 @@ contract ZKPSBT is SBT {
         EncryptedData calldata encryptedCreditScore,
         EncryptedData calldata encryptedIncome,
         EncryptedData calldata encryptedReportDate
-    ) external payable virtual returns (uint256) {
-        uint256 tokenId = _mintWithCounter(to);
+    ) external payable virtual onlyOwner returns (uint256) {
+        uint256 tokenId = _mint(to);
 
         sbtData[tokenId] = SBTData({
             hashData: hashData,
@@ -87,8 +73,6 @@ contract ZKPSBT is SBT {
             encryptedIncome: encryptedIncome,
             encryptedReportDate: encryptedReportDate
         });
-
-        emit MintedToAddress(tokenId, to);
 
         return tokenId;
     }
@@ -122,6 +106,4 @@ contract ZKPSBT is SBT {
     /* ========== MODIFIERS ================================================= */
 
     /* ========== EVENTS ==================================================== */
-
-    event MintedToAddress(uint256 tokenId, address to);
 }
