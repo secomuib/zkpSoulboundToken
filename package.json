@@ -1,5 +1,5 @@
 {
-  "name": "zkpSoulboundToken",
+  "name": "zkpsbt",
   "version": "0.0.1",
   "main": "dist/typechain/index.js",
   "types": "dist/typechain/index.d.ts",
