@@ -15,7 +15,7 @@ interface IVerifier {
 }
 
 interface IZKPSBT is IERC721 {
-    function getHashData(uint256 tokenId) external view returns (bytes memory);
+    function getRoot(uint256 tokenId) external view returns (bytes memory);
 }
 
 /// @title Verify if user is eligible for a loan
@@ -54,11 +54,11 @@ contract VerifyCreditScore {
             "The SBT doesn't belong to the address that is trying to claim the loan"
         );
 
-        bytes memory hash = zkpSBT.getHashData(sbtTokenId);
+        bytes memory root = zkpSBT.getRoot(sbtTokenId);
         require(
-            keccak256(abi.encodePacked(hash)) ==
+            keccak256(abi.encodePacked(root)) ==
                 keccak256(abi.encodePacked(publicValues[1])),
-            "The hash of the data doesn't match the hash of the data in the SBT"
+            "The root of the Merkle Tree's data doesn't match the root stored in the SBT"
         );
 
         require(

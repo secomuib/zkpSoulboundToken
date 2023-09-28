@@ -39,8 +39,8 @@ const threshold = 40;
 let encryptedCreditScore;
 let encryptedIncome;
 let encryptedReportDate;
-let hashData;
-let hashDataHex;
+let root;
+let rootHex;
 
 describe("ZKP SBT", () => {
   beforeEach(async () => {
@@ -80,15 +80,15 @@ describe("ZKP SBT", () => {
       address1.address
     );
 
-    // middleware calculates hash of data
+    // middleware calculates root of the Merkle Tree's data
     const poseidon = await buildPoseidon();
-    hashData = poseidon([
+    root = poseidon([
       BigInt(address1.address),
       BigInt(creditScore),
       BigInt(income),
       BigInt(reportDate)
     ]);
-    hashDataHex = "0x" + BigInt(poseidon.F.toString(hashData)).toString(16);
+    rootHex = "0x" + BigInt(poseidon.F.toString(root)).toString(16);
 
     // middleware encrypts data with public key of address1
     encryptedCreditScore = await encryptWithPublicKey(
@@ -121,7 +121,7 @@ describe("ZKP SBT", () => {
         .connect(owner)
         .mint(
           address1.address,
-          hashDataHex,
+          rootHex,
           encryptedCreditScore,
           encryptedIncome,
           encryptedReportDate
@@ -139,7 +139,7 @@ describe("ZKP SBT", () => {
           .connect(address1)
           .mint(
             address1.address,
-            hashDataHex,
+            rootHex,
             encryptedCreditScore,
             encryptedIncome,
             encryptedReportDate
@@ -154,7 +154,7 @@ describe("ZKP SBT", () => {
         .connect(owner)
         .mint(
           address1.address,
-          hashDataHex,
+          rootHex,
           encryptedCreditScore,
           encryptedIncome,
           encryptedReportDate
@@ -178,7 +178,7 @@ describe("ZKP SBT", () => {
         sbtData.encryptedReportDate
       );
 
-      // we check that the hash of the data is the same
+      // we check that the root of the Merkle Tree's data is the same
       const poseidon = await buildPoseidon();
       expect(
         "0x" +
@@ -192,14 +192,14 @@ describe("ZKP SBT", () => {
               ])
             )
           ).toString(16)
-      ).to.equal(sbtData.hashData);
+      ).to.equal(sbtData.root);
 
       // we check that the data is the same
       expect(+decryptedCreditScore).to.equal(creditScore);
 
       // input of ZKP
       const input = {
-        hashData: sbtData.hashData,
+        root: sbtData.root,
         ownerAddress: address1.address,
         threshold: threshold,
         creditScore: +decryptedCreditScore,
@@ -225,12 +225,12 @@ describe("ZKP SBT", () => {
       ).to.be.equal(threshold);
     });
 
-    it("proof with invalid creditScore will fail (incorrect hash)", async () => {
+    it("proof with invalid creditScore will fail (incorrect merkle tree root)", async () => {
       const mintTx = await zkpSBT
         .connect(owner)
         .mint(
           address1.address,
-          hashDataHex,
+          rootHex,
           encryptedCreditScore,
           encryptedIncome,
           encryptedReportDate
@@ -242,7 +242,7 @@ describe("ZKP SBT", () => {
 
       // input of ZKP
       const input = {
-        hashData: sbtData.hashData,
+        root: sbtData.root,
         ownerAddress: address1.address,
         threshold: threshold,
         creditScore: 55, // invalid credit score
@@ -250,7 +250,7 @@ describe("ZKP SBT", () => {
         reportDate: reportDate
       };
 
-      // generate ZKP proof will fail because the hash is not correct
+      // generate ZKP proof will fail because the merkle tree root is not correct
       await expect(genProof(input)).to.be.rejected;
 
       expect(

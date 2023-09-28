@@ -5,7 +5,7 @@ include "../node_modules/circomlib/circuits/poseidon.circom";
 
 template creditScoreConstraint() {
     // public
-    signal input hashData;
+    signal input root;
     signal input ownerAddress;
     signal input threshold;
     // private
@@ -16,13 +16,13 @@ template creditScoreConstraint() {
     // true/false
     signal output out;
 
-    // check hash of creditScore to be equal to hashData
+    // check hash of creditScore to be equal to root
     component hash = Poseidon(4);
     hash.inputs[0] <== ownerAddress;
     hash.inputs[1] <== creditScore;
     hash.inputs[2] <== income;
     hash.inputs[3] <== reportDate;
-    hashData === hash.out;
+    root === hash.out;
 
     // considering max creditScore 127
     component greaterEqThan = GreaterEqThan(8); 
@@ -33,4 +33,4 @@ template creditScoreConstraint() {
     out === 1;
 }
 
-component main {public [hashData,ownerAddress,threshold]} = creditScoreConstraint();
+component main {public [root,ownerAddress,threshold]} = creditScoreConstraint();

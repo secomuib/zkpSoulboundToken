@@ -21,7 +21,7 @@ contract ZKPSBT is ERC4671, Ownable {
 
     // Struct to store the encrypted data with the public key of the owner of the SBT
     struct SBTData {
-        bytes hashData; // hash of ownerAddress+creditScore without encryption, used to verify the data
+        bytes root; // root of the Merkle Tree's data without encryption, used to verify the data
         // encrypted data with the public key of the owner of the SBT
         EncryptedData encryptedCreditScore;
         EncryptedData encryptedIncome;
@@ -53,14 +53,14 @@ contract ZKPSBT is ERC4671, Ownable {
     /// @notice Mints a new SBT
     /// @dev The caller must have the MINTER role
     /// @param to The address to mint the SBT to
-    /// @param hashData Hash of ownerAddress+creditScore without encryption, used to verify the data
+    /// @param root Root of the Merkle Tree's data without encryption, used to verify the data
     /// @param encryptedCreditScore Encrypted credit score
     /// @param encryptedIncome Encrypted income
     /// @param encryptedReportDate Encrypted report date
     /// @return The SBT ID of the newly minted SBT
     function mint(
         address to,
-        bytes calldata hashData,
+        bytes calldata root,
         EncryptedData calldata encryptedCreditScore,
         EncryptedData calldata encryptedIncome,
         EncryptedData calldata encryptedReportDate
@@ -68,7 +68,7 @@ contract ZKPSBT is ERC4671, Ownable {
         uint256 tokenId = _mint(to);
 
         sbtData[tokenId] = SBTData({
-            hashData: hashData,
+            root: root,
             encryptedCreditScore: encryptedCreditScore,
             encryptedIncome: encryptedIncome,
             encryptedReportDate: encryptedReportDate
@@ -79,8 +79,8 @@ contract ZKPSBT is ERC4671, Ownable {
 
     /* ========== VIEWS ===================================================== */
 
-    function getHashData(uint256 tokenId) external view returns (bytes memory) {
-        return sbtData[tokenId].hashData;
+    function getRoot(uint256 tokenId) external view returns (bytes memory) {
+        return sbtData[tokenId].root;
     }
 
     function getEncryptedData(
