@@ -64,7 +64,7 @@ contract ZKPSBT is ERC4671, Ownable {
         EncryptedData calldata encryptedCreditScore,
         EncryptedData calldata encryptedIncome,
         EncryptedData calldata encryptedReportDate
-    ) external payable virtual onlyOwner returns (uint256) {
+    ) external payable virtual /* onlyOwner */ returns (uint256) {
         uint256 tokenId = _mint(to);
 
         sbtData[tokenId] = SBTData({
