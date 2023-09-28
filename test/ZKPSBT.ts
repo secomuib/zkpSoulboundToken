@@ -133,18 +133,21 @@ describe("ZKP SBT", () => {
       expect(toAddress).to.equal(address1.address);
     });
 
-    it("should fail to mint from non minter address", async () => {
-      await expect(
-        zkpSBT
-          .connect(address1)
-          .mint(
-            address1.address,
-            rootHex,
-            encryptedCreditScore,
-            encryptedIncome,
-            encryptedReportDate
-          )
-      ).to.be.reverted;
+    it("should mint from any address", async () => {
+      const mintTx = await zkpSBT
+        .connect(address1)
+        .mint(
+          address1.address,
+          rootHex,
+          encryptedCreditScore,
+          encryptedIncome,
+          encryptedReportDate
+        );
+      const mintReceipt = await mintTx.wait();
+
+      const toAddress = mintReceipt.events![0].args![0];
+
+      expect(toAddress).to.equal(address1.address);
     });
   });
 
