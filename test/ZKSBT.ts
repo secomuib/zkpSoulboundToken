@@ -34,7 +34,6 @@ let address1: Wallet;
 const creditScore = 45;
 const income = 3100;
 const reportDate = new Date("2023-01-31T20:23:01.804Z").getTime();
-const threshold = 40;
 
 let encryptedCreditScore;
 let encryptedIncome;
@@ -203,11 +202,16 @@ describe("ZKP SBT", () => {
       // input of ZKP
       const input = {
         root: sbtData.root,
-        ownerAddress: address1.address,
-        threshold: threshold,
-        creditScore: +decryptedCreditScore,
-        income: +decryptedIncome,
-        reportDate: +decryptedReportDate
+        owner: address1.address,
+        threshold: 40,
+        operator: 3, // 3 = greater than or equal to
+        value: +decryptedCreditScore,
+        data: [
+          address1.address,
+          +decryptedCreditScore,
+          +decryptedIncome,
+          +decryptedReportDate
+        ]
       };
 
       // generate ZKP proof
@@ -225,7 +229,7 @@ describe("ZKP SBT", () => {
 
       expect(
         await verifyCreditScore.isElegibleForLoan(address1.address)
-      ).to.be.equal(threshold);
+      ).to.be.equal(40);
     });
 
     it("proof with invalid creditScore will fail (incorrect merkle tree root)", async () => {
@@ -246,11 +250,11 @@ describe("ZKP SBT", () => {
       // input of ZKP
       const input = {
         root: sbtData.root,
-        ownerAddress: address1.address,
-        threshold: threshold,
-        creditScore: 55, // invalid credit score
-        income: income,
-        reportDate: reportDate
+        owner: address1.address,
+        threshold: 40,
+        operator: 3, // 3 = greater than or equal to
+        value: 55, // invalid credit score
+        data: [address1.address, 55, income, reportDate]
       };
 
       // generate ZKP proof will fail because the merkle tree root is not correct

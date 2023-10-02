@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.7;
+pragma solidity ^0.8.8;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
@@ -10,7 +10,7 @@ interface IVerifier {
         uint[2] memory a,
         uint[2][2] memory b,
         uint[2] memory c,
-        uint[4] memory input
+        uint[5] memory input
     ) external view returns (bool);
 }
 
@@ -36,12 +36,28 @@ contract VerifyCreditScore {
         uint[2] memory a,
         uint[2][2] memory b,
         uint[2] memory c,
-        uint[4] memory publicValues,
+        uint[5] memory publicValues,
         IZKSBT zkSBT,
         uint256 sbtTokenId
     ) public {
-        address ownerAddress = address(uint160(publicValues[2]));
+        address owner = address(uint160(publicValues[2]));
         uint256 threshold = publicValues[3];
+        uint256 operator = publicValues[4];
+        string memory operatorStr;
+
+        if (operator == 0) {
+            operatorStr = "is elegible for a loan with a credit score =";
+        } else if (operator == 1) {
+            operatorStr = "is elegible for a loan with a credit score !=";
+        } else if (operator == 2) {
+            operatorStr = "is elegible for a loan with a credit score >";
+        } else if (operator == 3) {
+            operatorStr = "is elegible for a loan with a credit score >=";
+        } else if (operator == 4) {
+            operatorStr = "is elegible for a loan with a credit score <";
+        } else if (operator == 5) {
+            operatorStr = "is elegible for a loan with a credit score <=";
+        }
 
         require(
             publicValues[0] ==
@@ -50,7 +66,7 @@ contract VerifyCreditScore {
         );
 
         require(
-            zkSBT.ownerOf(sbtTokenId) == ownerAddress,
+            zkSBT.ownerOf(sbtTokenId) == owner,
             "The SBT doesn't belong to the address that is trying to claim the loan"
         );
 
@@ -66,13 +82,8 @@ contract VerifyCreditScore {
             "Proof verification failed"
         );
 
-        console.log(
-            "Address",
-            ownerAddress,
-            "is elegible for a loan with a credit score >=",
-            threshold
-        );
+        console.log("Address", owner, operatorStr, threshold);
 
-        isElegibleForLoan[ownerAddress] = threshold;
+        isElegibleForLoan[owner] = threshold;
     }
 }

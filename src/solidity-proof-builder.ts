@@ -2,9 +2,8 @@
 
 const snarkjs = require("snarkjs");
 
-const wasm_path =
-  "circuits/creditScoreConstraint_js/creditScoreConstraint.wasm";
-const zkey_path = "circuits/creditScoreConstraint_0001.zkey";
+const wasm_path = "circuits/verifyCreditScore_js/verifyCreditScore.wasm";
+const zkey_path = "circuits/verifyCreditScore_0001.zkey";
 
 const genProof = async (input) => {
   const { proof, publicSignals } = await snarkjs.groth16.fullProve(
