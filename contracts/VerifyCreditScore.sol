@@ -24,7 +24,7 @@ interface IZKSBT is IERC721 {
 contract VerifyCreditScore {
     IVerifier verifier;
 
-    mapping(address => uint256) public isElegibleForLoan;
+    mapping(address => bool) public isElegibleForLoan;
 
     constructor(IVerifier _verifier) {
         verifier = _verifier;
@@ -84,6 +84,6 @@ contract VerifyCreditScore {
 
         console.log("Address", owner, operatorStr, threshold);
 
-        isElegibleForLoan[owner] = threshold;
+        isElegibleForLoan[owner] = true;
     }
 }
