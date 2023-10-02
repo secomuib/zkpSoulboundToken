@@ -47,5 +47,5 @@ const func: DeployFunction = async ({
 };
 
 func.tags = ["VerifyCreditScore"];
-func.dependencies = ["Verifier", "ZKPSBT"];
+func.dependencies = ["Verifier", "ZKSBT"];
 export default func;

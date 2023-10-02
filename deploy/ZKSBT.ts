@@ -26,7 +26,7 @@ const func: DeployFunction = async ({
     env.SBT_SYMBOL
   ];
 
-  const zkpSBTDeploymentResult = await deploy("ZKPSBT", {
+  const zkSBTDeploymentResult = await deploy("ZKSBT", {
     from: deployer,
     args: constructorArguments,
     log: true
@@ -36,7 +36,7 @@ const func: DeployFunction = async ({
   if (network.name !== "hardhat") {
     try {
       await hre.run("verify:verify", {
-        address: zkpSBTDeploymentResult.address,
+        address: zkSBTDeploymentResult.address,
         constructorArguments
       });
     } catch (error) {
@@ -50,6 +50,6 @@ const func: DeployFunction = async ({
   }
 };
 
-func.tags = ["ZKPSBT"];
+func.tags = ["ZKSBT"];
 func.dependencies = [];
 export default func;

@@ -6,8 +6,8 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   VerifyCreditScore,
   VerifyCreditScore__factory,
-  ZKPSBT,
-  ZKPSBT__factory
+  ZKSBT,
+  ZKSBT__factory
 } from "../typechain";
 import { Wallet } from "ethers";
 import publicKeyToAddress from "ethereum-public-key-to-address";
@@ -25,7 +25,7 @@ chai.use(solidity);
 const expect = chai.expect;
 
 // contract instances
-let zkpSBT: ZKPSBT;
+let zkSBT: ZKSBT;
 let verifyCreditScore: VerifyCreditScore;
 
 let owner: SignerWithAddress;
@@ -52,7 +52,7 @@ describe("ZKP SBT", () => {
       ethers.provider
     );
 
-    await deployments.fixture("ZKPSBT", {
+    await deployments.fixture("ZKSBT", {
       fallbackToGlobal: true
     });
     await deployments.fixture("VerifyCreditScore", {
@@ -64,12 +64,12 @@ describe("ZKP SBT", () => {
       value: ethers.utils.parseEther("1")
     });
 
-    const { address: zkpSBTAddress } = await deployments.get("ZKPSBT");
+    const { address: zkSBTAddress } = await deployments.get("ZKSBT");
     const { address: verifyCreditScoreAddress } = await deployments.get(
       "VerifyCreditScore"
     );
 
-    zkpSBT = ZKPSBT__factory.connect(zkpSBTAddress, owner);
+    zkSBT = ZKSBT__factory.connect(zkSBTAddress, owner);
     verifyCreditScore = VerifyCreditScore__factory.connect(
       verifyCreditScoreAddress,
       owner
@@ -109,15 +109,15 @@ describe("ZKP SBT", () => {
 
   describe("sbt information", () => {
     it("should be able to get sbt information", async () => {
-      expect(await zkpSBT.name()).to.equal("ZKP SBT");
+      expect(await zkSBT.name()).to.equal("ZKP SBT");
 
-      expect(await zkpSBT.symbol()).to.equal("ZKPSBT");
+      expect(await zkSBT.symbol()).to.equal("ZKSBT");
     });
   });
 
   describe("mint", () => {
     it("should mint from owner", async () => {
-      const mintTx = await zkpSBT
+      const mintTx = await zkSBT
         .connect(owner)
         .mint(
           address1.address,
@@ -134,7 +134,7 @@ describe("ZKP SBT", () => {
     });
 
     it("should mint from any address", async () => {
-      const mintTx = await zkpSBT
+      const mintTx = await zkSBT
         .connect(address1)
         .mint(
           address1.address,
@@ -153,7 +153,7 @@ describe("ZKP SBT", () => {
 
   describe("decrypt data", () => {
     it("decrypt the data with address1 private key and generate/validate proof", async () => {
-      const mintTx = await zkpSBT
+      const mintTx = await zkSBT
         .connect(owner)
         .mint(
           address1.address,
@@ -165,7 +165,7 @@ describe("ZKP SBT", () => {
 
       const mintReceipt = await mintTx.wait();
       const tokenId = mintReceipt.events![0].args![1].toNumber();
-      const sbtData = await zkpSBT.sbtData(tokenId);
+      const sbtData = await zkSBT.sbtData(tokenId);
 
       // we decrypt the data with the private key of address1
       const decryptedCreditScore = await decryptWithPrivateKey(
@@ -219,7 +219,7 @@ describe("ZKP SBT", () => {
         proof.b,
         proof.c,
         proof.PubSignals,
-        zkpSBT.address,
+        zkSBT.address,
         tokenId
       );
 
@@ -229,7 +229,7 @@ describe("ZKP SBT", () => {
     });
 
     it("proof with invalid creditScore will fail (incorrect merkle tree root)", async () => {
-      const mintTx = await zkpSBT
+      const mintTx = await zkSBT
         .connect(owner)
         .mint(
           address1.address,
@@ -241,7 +241,7 @@ describe("ZKP SBT", () => {
 
       const mintReceipt = await mintTx.wait();
       const tokenId = mintReceipt.events![0].args![1].toNumber();
-      const sbtData = await zkpSBT.sbtData(tokenId);
+      const sbtData = await zkSBT.sbtData(tokenId);
 
       // input of ZKP
       const input = {

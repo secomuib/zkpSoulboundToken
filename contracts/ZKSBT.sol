@@ -9,7 +9,7 @@ import "./eip-4671/ERC4671.sol";
 /// @author Miquel A. Cabot
 /// @notice Soulbound token implementing ZKP
 /// @dev Inherits from the SSBT contract
-contract ZKPSBT is ERC4671, Ownable {
+contract ZKSBT is ERC4671, Ownable {
     /* ========== STATE VARIABLES =========================================== */
 
     struct EncryptedData {
