@@ -511,7 +511,7 @@ describe("ZKP SBT", () => {
       await expect(genProof(input)).to.be.rejected;
 
       expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .true;
+        .false;
     });
 
     it("proof with valid creditScore will succeed (45<50)", async () => {
