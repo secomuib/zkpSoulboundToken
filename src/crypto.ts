@@ -1,6 +1,6 @@
 import EthCrypto from "eth-crypto";
 
-const encryptWithPublicKey = async (publicKey, value) => {
+const encryptWithPublicKey = async (publicKey: any, value: any) => {
   const encryptedValue = await EthCrypto.encryptWithPublicKey(
     publicKey.replace("0x", ""), // publicKey
     value // message JSON.stringify(data)
@@ -13,7 +13,7 @@ const encryptWithPublicKey = async (publicKey, value) => {
   };
 };
 
-const decryptWithPrivateKey = async (privateKey, encryptedValue) => {
+const decryptWithPrivateKey = async (privateKey: any, encryptedValue: any) => {
   const decryptedValue = await EthCrypto.decryptWithPrivateKey(
     privateKey.replace("0x", ""), // privateKey
     {
