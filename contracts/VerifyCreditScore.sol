@@ -3,8 +3,6 @@ pragma solidity ^0.8.8;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
-import "hardhat/console.sol";
-
 interface IVerifier {
     function verifyProof(
         uint[2] memory a,
@@ -36,28 +34,17 @@ contract VerifyCreditScore {
         uint[2] memory a,
         uint[2][2] memory b,
         uint[2] memory c,
-        uint[5] memory publicValues,
+        uint[] memory publicValues,
         IZKSBT zkSBT,
         uint256 sbtTokenId
     ) public {
-        address owner = address(uint160(publicValues[2]));
-        uint256 threshold = publicValues[3];
-        uint256 operator = publicValues[4];
-        string memory operatorStr;
-
-        if (operator == 0) {
-            operatorStr = "is elegible for a loan with a credit score =";
-        } else if (operator == 1) {
-            operatorStr = "is elegible for a loan with a credit score !=";
-        } else if (operator == 2) {
-            operatorStr = "is elegible for a loan with a credit score >";
-        } else if (operator == 3) {
-            operatorStr = "is elegible for a loan with a credit score >=";
-        } else if (operator == 4) {
-            operatorStr = "is elegible for a loan with a credit score <";
-        } else if (operator == 5) {
-            operatorStr = "is elegible for a loan with a credit score <=";
+        // convert dynamic array to fixed array
+        uint[5] memory pValues;
+        for (uint i = 0; i < pValues.length; i++) {
+            pValues[i] = publicValues[i];
         }
+
+        address owner = address(uint160(publicValues[2]));
 
         require(
             publicValues[0] ==
@@ -78,11 +65,9 @@ contract VerifyCreditScore {
         );
 
         require(
-            verifier.verifyProof(a, b, c, publicValues),
+            verifier.verifyProof(a, b, c, pValues),
             "Proof verification failed"
         );
-
-        console.log("Address", owner, operatorStr, threshold);
 
         isElegibleForLoan[owner] = true;
     }
