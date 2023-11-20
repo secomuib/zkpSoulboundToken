@@ -5,12 +5,23 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "./eip-4671/ERC4671.sol";
 
+interface IVerifier {
+    function verifyProof(
+        uint[2] memory a,
+        uint[2][2] memory b,
+        uint[2] memory c,
+        uint[5] memory input
+    ) external view returns (bool);
+}
+
 /// @title ZKP SBT
 /// @author Miquel A. Cabot
 /// @notice Soulbound token implementing ZKP
 /// @dev Inherits from the SSBT contract
 contract ZKSBT is ERC4671, Ownable {
     /* ========== STATE VARIABLES =========================================== */
+
+    IVerifier verifier;
 
     struct EncryptedData {
         bytes iv; // IV
@@ -38,12 +49,15 @@ contract ZKSBT is ERC4671, Ownable {
     /// @param admin Administrator of the smart contract
     /// @param name Name of the token
     /// @param symbol Symbol of the token
+    /// @param _verifier Verifier smart contract
     constructor(
         address admin,
         string memory name,
-        string memory symbol
+        string memory symbol,
+        IVerifier _verifier
     ) ERC4671(name, symbol) {
         Ownable.transferOwnership(admin);
+        verifier = _verifier;
     }
 
     /* ========== RESTRICTED FUNCTIONS ====================================== */
@@ -79,7 +93,7 @@ contract ZKSBT is ERC4671, Ownable {
 
     /* ========== VIEWS ===================================================== */
 
-    function getRoot(uint256 tokenId) external view returns (bytes memory) {
+    function getRoot(uint256 tokenId) public view returns (bytes memory) {
         return sbtData[tokenId].root;
     }
 
@@ -99,6 +113,49 @@ contract ZKSBT is ERC4671, Ownable {
             sbtData[tokenId].encryptedIncome,
             sbtData[tokenId].encryptedReportDate
         );
+    }
+
+    // @notice verifies the validity of the proof, and make further verifications on the public
+    // input of the circuit
+    function verifyProof(
+        uint[2] memory a,
+        uint[2][2] memory b,
+        uint[2] memory c,
+        uint[] memory publicValues,
+        uint256 tokenId
+    ) external view returns (bool) {
+        // convert dynamic array to fixed array
+        uint[5] memory pValues;
+        for (uint i = 0; i < pValues.length; i++) {
+            pValues[i] = publicValues[i];
+        }
+
+        address owner = address(uint160(publicValues[2]));
+
+        require(
+            publicValues[0] ==
+                0x0000000000000000000000000000000000000000000000000000000000000001,
+            "The claim doesn't satisfy the query condition"
+        );
+
+        require(
+            ownerOf(tokenId) == owner,
+            "The SBT doesn't belong to the address that is trying to claim the loan"
+        );
+
+        bytes memory root = getRoot(tokenId);
+        require(
+            keccak256(abi.encodePacked(root)) ==
+                keccak256(abi.encodePacked(publicValues[1])),
+            "The root of the Merkle Tree's data doesn't match the root stored in the SBT"
+        );
+
+        require(
+            verifier.verifyProof(a, b, c, pValues),
+            "Proof verification failed"
+        );
+
+        return true;
     }
 
     /* ========== PRIVATE FUNCTIONS ========================================= */

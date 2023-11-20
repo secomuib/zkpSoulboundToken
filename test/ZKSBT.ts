@@ -3,12 +3,7 @@ import chaiAsPromised from "chai-as-promised";
 import { solidity } from "ethereum-waffle";
 import { deployments, ethers } from "hardhat";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import {
-  VerifyCreditScore,
-  VerifyCreditScore__factory,
-  ZKSBT,
-  ZKSBT__factory
-} from "../typechain";
+import { ZKSBT, ZKSBT__factory } from "../typechain";
 import { Wallet } from "ethers";
 import publicKeyToAddress from "ethereum-public-key-to-address";
 
@@ -26,7 +21,6 @@ const expect = chai.expect;
 
 // contract instances
 let zkSBT: ZKSBT;
-let verifyCreditScore: VerifyCreditScore;
 
 let owner: SignerWithAddress;
 let address1: Wallet;
@@ -54,9 +48,6 @@ describe("ZKP SBT", () => {
     await deployments.fixture("ZKSBT", {
       fallbackToGlobal: true
     });
-    await deployments.fixture("VerifyCreditScore", {
-      fallbackToGlobal: true
-    });
 
     await owner.sendTransaction({
       to: address1.address,
@@ -64,15 +55,8 @@ describe("ZKP SBT", () => {
     });
 
     const { address: zkSBTAddress } = await deployments.get("ZKSBT");
-    const { address: verifyCreditScoreAddress } = await deployments.get(
-      "VerifyCreditScore"
-    );
 
     zkSBT = ZKSBT__factory.connect(zkSBTAddress, owner);
-    verifyCreditScore = VerifyCreditScore__factory.connect(
-      verifyCreditScoreAddress,
-      owner
-    );
 
     // middleware checks that public key belongs to address1
     expect(publicKeyToAddress(address1.publicKey)).to.be.equal(
@@ -218,17 +202,15 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      await verifyCreditScore.loanEligible(
-        proof.a,
-        proof.b,
-        proof.c,
-        proof.PubSignals,
-        zkSBT.address,
-        tokenId
-      );
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .true;
+      expect(
+        await zkSBT.verifyProof(
+          proof.a,
+          proof.b,
+          proof.c,
+          proof.PubSignals,
+          tokenId
+        )
+      ).to.be.true;
     });
 
     it("proof with invalid creditScore will fail (incorrect merkle tree root)", async () => {
@@ -258,9 +240,6 @@ describe("ZKP SBT", () => {
 
       // generate ZKP proof will fail because the merkle tree root is not correct
       await expect(genProof(input)).to.be.rejected;
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .false;
     });
   });
 
@@ -299,17 +278,15 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      await verifyCreditScore.loanEligible(
-        proof.a,
-        proof.b,
-        proof.c,
-        proof.PubSignals,
-        zkSBT.address,
-        tokenId
-      );
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .true;
+      expect(
+        await zkSBT.verifyProof(
+          proof.a,
+          proof.b,
+          proof.c,
+          proof.PubSignals,
+          tokenId
+        )
+      ).to.be.true;
     });
 
     it("proof with valid creditScore will fail (45==40)", async () => {
@@ -325,9 +302,6 @@ describe("ZKP SBT", () => {
 
       // generate ZKP proof
       await expect(genProof(input)).to.be.rejected;
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .false;
     });
 
     it("proof with valid creditScore will succeed (45!=40)", async () => {
@@ -345,17 +319,15 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      await verifyCreditScore.loanEligible(
-        proof.a,
-        proof.b,
-        proof.c,
-        proof.PubSignals,
-        zkSBT.address,
-        tokenId
-      );
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .true;
+      expect(
+        await zkSBT.verifyProof(
+          proof.a,
+          proof.b,
+          proof.c,
+          proof.PubSignals,
+          tokenId
+        )
+      ).to.be.true;
     });
 
     it("proof with valid creditScore will fail (45!=45)", async () => {
@@ -371,9 +343,6 @@ describe("ZKP SBT", () => {
 
       // generate ZKP proof
       await expect(genProof(input)).to.be.rejected;
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .false;
     });
 
     it("proof with valid creditScore will succeed (45>40)", async () => {
@@ -391,17 +360,15 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      await verifyCreditScore.loanEligible(
-        proof.a,
-        proof.b,
-        proof.c,
-        proof.PubSignals,
-        zkSBT.address,
-        tokenId
-      );
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .true;
+      expect(
+        await zkSBT.verifyProof(
+          proof.a,
+          proof.b,
+          proof.c,
+          proof.PubSignals,
+          tokenId
+        )
+      ).to.be.true;
     });
 
     it("proof with valid creditScore will fail (45>45)", async () => {
@@ -417,9 +384,6 @@ describe("ZKP SBT", () => {
 
       // generate ZKP proof
       await expect(genProof(input)).to.be.rejected;
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .false;
     });
 
     it("proof with invalid creditScore will fail (45>50)", async () => {
@@ -435,9 +399,6 @@ describe("ZKP SBT", () => {
 
       // generate ZKP proof will fail because the hash is not correct
       await expect(genProof(input)).to.be.rejected;
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .false;
     });
 
     it("proof with valid creditScore will succeed (45>=40)", async () => {
@@ -455,17 +416,15 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      await verifyCreditScore.loanEligible(
-        proof.a,
-        proof.b,
-        proof.c,
-        proof.PubSignals,
-        zkSBT.address,
-        tokenId
-      );
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .true;
+      expect(
+        await zkSBT.verifyProof(
+          proof.a,
+          proof.b,
+          proof.c,
+          proof.PubSignals,
+          tokenId
+        )
+      ).to.be.true;
     });
 
     it("proof with valid creditScore will succeed (45>=45)", async () => {
@@ -483,17 +442,15 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      await verifyCreditScore.loanEligible(
-        proof.a,
-        proof.b,
-        proof.c,
-        proof.PubSignals,
-        zkSBT.address,
-        tokenId
-      );
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .true;
+      expect(
+        await zkSBT.verifyProof(
+          proof.a,
+          proof.b,
+          proof.c,
+          proof.PubSignals,
+          tokenId
+        )
+      ).to.be.true;
     });
 
     it("proof with invalid creditScore will fail (45>=50)", async () => {
@@ -509,9 +466,6 @@ describe("ZKP SBT", () => {
 
       // generate ZKP proof will fail because the hash is not correct
       await expect(genProof(input)).to.be.rejected;
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .false;
     });
 
     it("proof with valid creditScore will succeed (45<50)", async () => {
@@ -529,17 +483,15 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      await verifyCreditScore.loanEligible(
-        proof.a,
-        proof.b,
-        proof.c,
-        proof.PubSignals,
-        zkSBT.address,
-        tokenId
-      );
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .true;
+      expect(
+        await zkSBT.verifyProof(
+          proof.a,
+          proof.b,
+          proof.c,
+          proof.PubSignals,
+          tokenId
+        )
+      ).to.be.true;
     });
 
     it("proof with valid creditScore will fail (45<45)", async () => {
@@ -555,9 +507,6 @@ describe("ZKP SBT", () => {
 
       // generate ZKP proof
       await expect(genProof(input)).to.be.rejected;
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .false;
     });
 
     it("proof with invalid creditScore will fail (45<40)", async () => {
@@ -573,9 +522,6 @@ describe("ZKP SBT", () => {
 
       // generate ZKP proof will fail because the hash is not correct
       await expect(genProof(input)).to.be.rejected;
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .false;
     });
 
     it("proof with valid creditScore will succeed (45<=50)", async () => {
@@ -593,17 +539,15 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      await verifyCreditScore.loanEligible(
-        proof.a,
-        proof.b,
-        proof.c,
-        proof.PubSignals,
-        zkSBT.address,
-        tokenId
-      );
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .true;
+      expect(
+        await zkSBT.verifyProof(
+          proof.a,
+          proof.b,
+          proof.c,
+          proof.PubSignals,
+          tokenId
+        )
+      ).to.be.true;
     });
 
     it("proof with valid creditScore will succeed (45<=45)", async () => {
@@ -621,17 +565,15 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      await verifyCreditScore.loanEligible(
-        proof.a,
-        proof.b,
-        proof.c,
-        proof.PubSignals,
-        zkSBT.address,
-        tokenId
-      );
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .true;
+      expect(
+        await zkSBT.verifyProof(
+          proof.a,
+          proof.b,
+          proof.c,
+          proof.PubSignals,
+          tokenId
+        )
+      ).to.be.true;
     });
 
     it("proof with invalid creditScore will fail (45<=40)", async () => {
@@ -647,9 +589,6 @@ describe("ZKP SBT", () => {
 
       // generate ZKP proof will fail because the hash is not correct
       await expect(genProof(input)).to.be.rejected;
-
-      expect(await verifyCreditScore.isElegibleForLoan(address1.address)).to.be
-        .false;
     });
   });
 });

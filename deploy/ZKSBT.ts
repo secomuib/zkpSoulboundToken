@@ -20,10 +20,13 @@ const func: DeployFunction = async ({
   [admin] = await ethers.getSigners();
   const env = getEnvParams();
 
+  const verifierDeployed = await deployments.get("Verifier");
+
   const constructorArguments = [
     env.ADMIN || admin.address,
     env.SBT_NAME,
-    env.SBT_SYMBOL
+    env.SBT_SYMBOL,
+    verifierDeployed.address
   ];
 
   const zkSBTDeploymentResult = await deploy("ZKSBT", {
@@ -51,5 +54,5 @@ const func: DeployFunction = async ({
 };
 
 func.tags = ["ZKSBT"];
-func.dependencies = [];
+func.dependencies = ["Verifier"];
 export default func;
