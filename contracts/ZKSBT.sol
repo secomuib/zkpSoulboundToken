@@ -21,7 +21,7 @@ interface IVerifier {
 contract ZKSBT is ERC4671, Ownable {
     /* ========== STATE VARIABLES =========================================== */
 
-    IVerifier verifier;
+    IVerifier internal _verifier;
 
     struct EncryptedData {
         bytes iv; // IV
@@ -49,15 +49,15 @@ contract ZKSBT is ERC4671, Ownable {
     /// @param admin Administrator of the smart contract
     /// @param name Name of the token
     /// @param symbol Symbol of the token
-    /// @param _verifier Verifier smart contract
+    /// @param verifier Verifier smart contract
     constructor(
         address admin,
         string memory name,
         string memory symbol,
-        IVerifier _verifier
+        IVerifier verifier
     ) ERC4671(name, symbol) {
         Ownable.transferOwnership(admin);
-        verifier = _verifier;
+        _verifier = verifier;
     }
 
     /* ========== RESTRICTED FUNCTIONS ====================================== */
@@ -93,10 +93,22 @@ contract ZKSBT is ERC4671, Ownable {
 
     /* ========== VIEWS ===================================================== */
 
+    /// @notice Returns the verifier smart contract
+    /// @return The verifier smart contract
+    function getVerifier() external view returns (IVerifier) {
+        return _verifier;
+    }
+
+    /// @notice Returns the root of the Merkle Tree's data without encryption, used to verify the data
+    /// @param tokenId The SBT ID
+    /// @return The root of the Merkle Tree's data without encryption, used to verify the data
     function getRoot(uint256 tokenId) public view returns (bytes memory) {
         return sbtData[tokenId].root;
     }
 
+    /// @notice Returns the encrypted data with the public key of the owner of the SBT
+    /// @param tokenId The SBT ID
+    /// @return The encrypted data with the public key of the owner of the SBT
     function getEncryptedData(
         uint256 tokenId
     )
@@ -117,6 +129,12 @@ contract ZKSBT is ERC4671, Ownable {
 
     // @notice verifies the validity of the proof, and make further verifications on the public
     // input of the circuit
+    // @param a First part of the proof
+    // @param b Second part of the proof
+    // @param c Third part of the proof
+    // @param publicValues Public input of the circuit
+    // @param tokenId The SBT ID
+    // @return True if the proof is valid, false otherwise
     function verifyProof(
         uint[2] memory a,
         uint[2][2] memory b,
