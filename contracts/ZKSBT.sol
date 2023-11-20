@@ -169,7 +169,7 @@ contract ZKSBT is ERC4671, Ownable {
         );
 
         require(
-            verifier.verifyProof(a, b, c, pValues),
+            _verifier.verifyProof(a, b, c, pValues),
             "Proof verification failed"
         );
 
