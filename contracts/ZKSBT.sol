@@ -118,12 +118,6 @@ contract ZKSBT is IZKSBT, ERC4671, Ownable {
         uint[] memory proof,
         uint[] memory publicValues
     ) external view override returns (bool) {
-        // convert dynamic array to fixed array
-        uint[5] memory pValues;
-        for (uint i = 0; i < pValues.length; i++) {
-            pValues[i] = publicValues[i];
-        }
-
         address owner = address(uint160(publicValues[2]));
 
         require(
@@ -144,14 +138,20 @@ contract ZKSBT is IZKSBT, ERC4671, Ownable {
             "The root of the Merkle Tree's data doesn't match the root stored in the SBT"
         );
 
+        // Convert the proof and the public values to the format expected by the verifier
         uint[2] memory a = [proof[0], proof[1]];
         uint[2][2] memory b = [[proof[2], proof[3]], [proof[4], proof[5]]];
         uint[2] memory c = [proof[6], proof[7]];
+        uint[5] memory p = [
+            publicValues[0],
+            publicValues[1],
+            publicValues[2],
+            publicValues[3],
+            publicValues[4]
+        ];
 
-        require(
-            _verifier.verifyProof(a, b, c, pValues),
-            "Proof verification failed"
-        );
+        // Verify the proof
+        require(_verifier.verifyProof(a, b, c, p), "Proof verification failed");
 
         return true;
     }
