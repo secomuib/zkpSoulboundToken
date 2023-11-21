@@ -55,6 +55,13 @@ contract ZKSBT is ERC4671, Ownable {
 
     /* ========== RESTRICTED FUNCTIONS ====================================== */
 
+    /// @notice Sets the verifier smart contract
+    /// @dev The caller must have the OWNER role
+    /// @param verifier Verifier smart contract
+    function setVerifier(IVerifier verifier) external onlyOwner {
+        _verifier = verifier;
+    }
+
     /* ========== MUTATIVE FUNCTIONS ======================================== */
 
     /// @notice Mints a new SBT
