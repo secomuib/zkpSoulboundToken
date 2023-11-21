@@ -199,11 +199,11 @@ describe("ZKP SBT", () => {
       // check ZKP proof
       expect(
         await zkSBT.verifyProof(
+          tokenId,
           proof.a,
           proof.b,
           proof.c,
-          proof.PubSignals,
-          tokenId
+          proof.PubSignals
         )
       ).to.be.true;
     });
@@ -271,11 +271,11 @@ describe("ZKP SBT", () => {
       // check ZKP proof
       expect(
         await zkSBT.verifyProof(
+          tokenId,
           proof.a,
           proof.b,
           proof.c,
-          proof.PubSignals,
-          tokenId
+          proof.PubSignals
         )
       ).to.be.true;
     });
@@ -312,11 +312,11 @@ describe("ZKP SBT", () => {
       // check ZKP proof
       expect(
         await zkSBT.verifyProof(
+          tokenId,
           proof.a,
           proof.b,
           proof.c,
-          proof.PubSignals,
-          tokenId
+          proof.PubSignals
         )
       ).to.be.true;
     });
@@ -353,11 +353,11 @@ describe("ZKP SBT", () => {
       // check ZKP proof
       expect(
         await zkSBT.verifyProof(
+          tokenId,
           proof.a,
           proof.b,
           proof.c,
-          proof.PubSignals,
-          tokenId
+          proof.PubSignals
         )
       ).to.be.true;
     });
@@ -409,11 +409,11 @@ describe("ZKP SBT", () => {
       // check ZKP proof
       expect(
         await zkSBT.verifyProof(
+          tokenId,
           proof.a,
           proof.b,
           proof.c,
-          proof.PubSignals,
-          tokenId
+          proof.PubSignals
         )
       ).to.be.true;
     });
@@ -435,11 +435,11 @@ describe("ZKP SBT", () => {
       // check ZKP proof
       expect(
         await zkSBT.verifyProof(
+          tokenId,
           proof.a,
           proof.b,
           proof.c,
-          proof.PubSignals,
-          tokenId
+          proof.PubSignals
         )
       ).to.be.true;
     });
@@ -476,11 +476,11 @@ describe("ZKP SBT", () => {
       // check ZKP proof
       expect(
         await zkSBT.verifyProof(
+          tokenId,
           proof.a,
           proof.b,
           proof.c,
-          proof.PubSignals,
-          tokenId
+          proof.PubSignals
         )
       ).to.be.true;
     });
@@ -532,11 +532,11 @@ describe("ZKP SBT", () => {
       // check ZKP proof
       expect(
         await zkSBT.verifyProof(
+          tokenId,
           proof.a,
           proof.b,
           proof.c,
-          proof.PubSignals,
-          tokenId
+          proof.PubSignals
         )
       ).to.be.true;
     });
@@ -558,11 +558,11 @@ describe("ZKP SBT", () => {
       // check ZKP proof
       expect(
         await zkSBT.verifyProof(
+          tokenId,
           proof.a,
           proof.b,
           proof.c,
-          proof.PubSignals,
-          tokenId
+          proof.PubSignals
         )
       ).to.be.true;
     });

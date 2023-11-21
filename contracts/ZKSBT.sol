@@ -4,6 +4,7 @@ pragma solidity ^0.8.18;
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "./eip-4671/ERC4671.sol";
+import "./IZKSBT.sol";
 
 interface IVerifier {
     function verifyProof(
@@ -18,7 +19,7 @@ interface IVerifier {
 /// @author Miquel A. Cabot
 /// @notice Soulbound token implementing ZKP
 /// @dev Inherits from the SSBT contract
-contract ZKSBT is ERC4671, Ownable {
+contract ZKSBT is IZKSBT, ERC4671, Ownable {
     /* ========== STATE VARIABLES =========================================== */
 
     IVerifier internal _verifier;
@@ -72,7 +73,7 @@ contract ZKSBT is ERC4671, Ownable {
         address to,
         bytes calldata root,
         bytes[] calldata encryptedData
-    ) external payable virtual returns (uint256) {
+    ) external payable virtual override returns (uint256) {
         uint256 tokenId = _mint(to);
 
         sbtData[tokenId] = SBTData({root: root, encryptedData: encryptedData});
@@ -91,7 +92,9 @@ contract ZKSBT is ERC4671, Ownable {
     /// @notice Returns the root of the Merkle Tree's data without encryption, used to verify the data
     /// @param tokenId The SBT ID
     /// @return The root of the Merkle Tree's data without encryption, used to verify the data
-    function getRoot(uint256 tokenId) public view returns (bytes memory) {
+    function getRoot(
+        uint256 tokenId
+    ) public view override returns (bytes memory) {
         return sbtData[tokenId].root;
     }
 
@@ -100,25 +103,25 @@ contract ZKSBT is ERC4671, Ownable {
     /// @return The encrypted data with the public key of the owner of the SBT
     function getEncryptedData(
         uint256 tokenId
-    ) external view returns (bytes[] memory) {
+    ) external view override returns (bytes[] memory) {
         return sbtData[tokenId].encryptedData;
     }
 
     // @notice verifies the validity of the proof, and make further verifications on the public
     // input of the circuit
+    // @param tokenId The SBT ID
     // @param a First part of the proof
     // @param b Second part of the proof
     // @param c Third part of the proof
     // @param publicValues Public input of the circuit
-    // @param tokenId The SBT ID
     // @return True if the proof is valid, false otherwise
     function verifyProof(
+        uint256 tokenId,
         uint[2] memory a,
         uint[2][2] memory b,
         uint[2] memory c,
-        uint[] memory publicValues,
-        uint256 tokenId
-    ) external view returns (bool) {
+        uint[] memory publicValues
+    ) external view override returns (bool) {
         // convert dynamic array to fixed array
         uint[5] memory pValues;
         for (uint i = 0; i < pValues.length; i++) {
