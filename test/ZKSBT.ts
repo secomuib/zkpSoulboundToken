@@ -102,13 +102,11 @@ describe("ZKP SBT", () => {
     it("should mint from owner", async () => {
       const mintTx = await zkSBT
         .connect(owner)
-        .mint(
-          address1.address,
-          rootHex,
+        .mint(address1.address, rootHex, [
           encryptedCreditScore,
           encryptedIncome,
           encryptedReportDate
-        );
+        ]);
       const mintReceipt = await mintTx.wait();
 
       const toAddress = mintReceipt.events![0].args![0];
@@ -119,13 +117,11 @@ describe("ZKP SBT", () => {
     it("should mint from any address", async () => {
       const mintTx = await zkSBT
         .connect(address1)
-        .mint(
-          address1.address,
-          rootHex,
+        .mint(address1.address, rootHex, [
           encryptedCreditScore,
           encryptedIncome,
           encryptedReportDate
-        );
+        ]);
       const mintReceipt = await mintTx.wait();
 
       const toAddress = mintReceipt.events![0].args![0];
@@ -138,30 +134,29 @@ describe("ZKP SBT", () => {
     it("decrypt the data with address1 private key and generate/validate proof", async () => {
       const mintTx = await zkSBT
         .connect(owner)
-        .mint(
-          address1.address,
-          rootHex,
+        .mint(address1.address, rootHex, [
           encryptedCreditScore,
           encryptedIncome,
           encryptedReportDate
-        );
+        ]);
 
       const mintReceipt = await mintTx.wait();
       const tokenId = mintReceipt.events![0].args![1].toNumber();
-      const sbtData = await zkSBT.sbtData(tokenId);
+      const storedRoot = await zkSBT.getRoot(tokenId);
+      const encryptedData = await zkSBT.getEncryptedData(tokenId);
 
       // we decrypt the data with the private key of address1
       const decryptedCreditScore = await decryptWithPrivateKey(
         address1.privateKey,
-        sbtData.encryptedCreditScore
+        encryptedData[0]
       );
       const decryptedIncome = await decryptWithPrivateKey(
         address1.privateKey,
-        sbtData.encryptedIncome
+        encryptedData[1]
       );
       const decryptedReportDate = await decryptWithPrivateKey(
         address1.privateKey,
-        sbtData.encryptedReportDate
+        encryptedData[2]
       );
 
       // we check that the root of the Merkle Tree's data is the same
@@ -178,14 +173,14 @@ describe("ZKP SBT", () => {
               ])
             )
           ).toString(16)
-      ).to.equal(sbtData.root);
+      ).to.equal(storedRoot);
 
       // we check that the data is the same
       expect(+decryptedCreditScore).to.equal(creditScore);
 
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 40,
         operator: 3, // 3 = greater than or equal to
@@ -216,21 +211,19 @@ describe("ZKP SBT", () => {
     it("proof with invalid creditScore will fail (incorrect merkle tree root)", async () => {
       const mintTx = await zkSBT
         .connect(owner)
-        .mint(
-          address1.address,
-          rootHex,
+        .mint(address1.address, rootHex, [
           encryptedCreditScore,
           encryptedIncome,
           encryptedReportDate
-        );
+        ]);
 
       const mintReceipt = await mintTx.wait();
       const tokenId = mintReceipt.events![0].args![1].toNumber();
-      const sbtData = await zkSBT.sbtData(tokenId);
+      const storedRoot = await zkSBT.getRoot(tokenId);
 
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 40,
         operator: 3, // 3 = greater than or equal to
@@ -245,28 +238,26 @@ describe("ZKP SBT", () => {
 
   describe("test ZKP comparator", () => {
     let tokenId;
-    let sbtData;
+    let storedRoot;
 
     beforeEach(async () => {
       const mintTx = await zkSBT
         .connect(owner)
-        .mint(
-          address1.address,
-          rootHex,
+        .mint(address1.address, rootHex, [
           encryptedCreditScore,
           encryptedIncome,
           encryptedReportDate
-        );
+        ]);
 
       const mintReceipt = await mintTx.wait();
       tokenId = mintReceipt.events![0].args![1].toNumber();
-      sbtData = await zkSBT.sbtData(tokenId);
+      storedRoot = await zkSBT.getRoot(tokenId);
     });
 
     it("proof with valid creditScore will succeed (45==45)", async () => {
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 45,
         operator: 0, // 0 = equal to
@@ -292,7 +283,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will fail (45==40)", async () => {
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 40,
         operator: 0, // 0 = equal to
@@ -307,7 +298,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will succeed (45!=40)", async () => {
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 40,
         operator: 1, // 1 = different than
@@ -333,7 +324,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will fail (45!=45)", async () => {
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 45,
         operator: 1, // 1 = different than
@@ -348,7 +339,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will succeed (45>40)", async () => {
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 40,
         operator: 2, // 2 = greater than
@@ -374,7 +365,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will fail (45>45)", async () => {
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 45,
         operator: 2, // 2 = greater than
@@ -389,7 +380,7 @@ describe("ZKP SBT", () => {
     it("proof with invalid creditScore will fail (45>50)", async () => {
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 50,
         operator: 2, // 2 = greater than
@@ -404,7 +395,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will succeed (45>=40)", async () => {
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 40,
         operator: 3, // 3 = greater than or equal to
@@ -430,7 +421,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will succeed (45>=45)", async () => {
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 45,
         operator: 3, // 3 = greater than or equal to
@@ -456,7 +447,7 @@ describe("ZKP SBT", () => {
     it("proof with invalid creditScore will fail (45>=50)", async () => {
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 50,
         operator: 3, // 3 = greater than or equal to
@@ -471,7 +462,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will succeed (45<50)", async () => {
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 50,
         operator: 4, // 4 = less than
@@ -497,7 +488,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will fail (45<45)", async () => {
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 45,
         operator: 4, // 4 = less than
@@ -512,7 +503,7 @@ describe("ZKP SBT", () => {
     it("proof with invalid creditScore will fail (45<40)", async () => {
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 40,
         operator: 4, // 4 = less than
@@ -527,7 +518,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will succeed (45<=50)", async () => {
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 50,
         operator: 5, // 5 = less than or equal to
@@ -553,7 +544,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will succeed (45<=45)", async () => {
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 45,
         operator: 5, // 5 = less than or equal to
@@ -579,7 +570,7 @@ describe("ZKP SBT", () => {
     it("proof with invalid creditScore will fail (45<=40)", async () => {
       // input of ZKP
       const input = {
-        root: sbtData.root,
+        root: storedRoot,
         owner: address1.address,
         threshold: 40,
         operator: 5, // 5 = less than or equal to

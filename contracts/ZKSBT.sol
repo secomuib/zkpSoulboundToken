@@ -27,13 +27,11 @@ contract ZKSBT is ERC4671, Ownable {
     struct SBTData {
         bytes root; // root of the Merkle Tree's data without encryption, used to verify the data
         // encrypted data with the public key of the owner of the SBT
-        bytes encryptedCreditScore;
-        bytes encryptedIncome;
-        bytes encryptedReportDate;
+        bytes[] encryptedData;
     }
 
     // tokenId => SBTData
-    mapping(uint256 => SBTData) public sbtData;
+    mapping(uint256 => SBTData) internal sbtData;
 
     /* ========== INITIALIZE ================================================ */
 
@@ -68,25 +66,16 @@ contract ZKSBT is ERC4671, Ownable {
     /// @dev The caller must have the MINTER role
     /// @param to The address to mint the SBT to
     /// @param root Root of the Merkle Tree's data without encryption, used to verify the data
-    /// @param encryptedCreditScore Encrypted credit score
-    /// @param encryptedIncome Encrypted income
-    /// @param encryptedReportDate Encrypted report date
+    /// @param encryptedData Encrypted data
     /// @return The SBT ID of the newly minted SBT
     function mint(
         address to,
         bytes calldata root,
-        bytes calldata encryptedCreditScore,
-        bytes calldata encryptedIncome,
-        bytes calldata encryptedReportDate /* onlyOwner */
+        bytes[] calldata encryptedData
     ) external payable virtual returns (uint256) {
         uint256 tokenId = _mint(to);
 
-        sbtData[tokenId] = SBTData({
-            root: root,
-            encryptedCreditScore: encryptedCreditScore,
-            encryptedIncome: encryptedIncome,
-            encryptedReportDate: encryptedReportDate
-        });
+        sbtData[tokenId] = SBTData({root: root, encryptedData: encryptedData});
 
         return tokenId;
     }
@@ -111,12 +100,8 @@ contract ZKSBT is ERC4671, Ownable {
     /// @return The encrypted data with the public key of the owner of the SBT
     function getEncryptedData(
         uint256 tokenId
-    ) external view returns (bytes memory, bytes memory, bytes memory) {
-        return (
-            sbtData[tokenId].encryptedCreditScore,
-            sbtData[tokenId].encryptedIncome,
-            sbtData[tokenId].encryptedReportDate
-        );
+    ) external view returns (bytes[] memory) {
+        return sbtData[tokenId].encryptedData;
     }
 
     // @notice verifies the validity of the proof, and make further verifications on the public
