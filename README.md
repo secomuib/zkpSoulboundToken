@@ -2,7 +2,7 @@
 
 A template for creating new SBTs inheriting from a SBT smart contracts, using ZKP.
 
-We use [eth-crypto](https://www.npmjs.com/package/eth-crypto) package to encrypt and decrypt the data.
+We use [ecies-geth](https://www.npmjs.com/package/ecies-geth) package to encrypt and decrypt the data.
 
 We use [ERC4671](https://github.com/ethereum/EIPs/blob/master/assets/eip-4671/ERC4671.sol) implementation as a base for the SBT smart contract.
 

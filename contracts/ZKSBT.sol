@@ -23,20 +23,13 @@ contract ZKSBT is ERC4671, Ownable {
 
     IVerifier internal _verifier;
 
-    struct EncryptedData {
-        bytes iv; // IV
-        bytes ephemPublicKey; // ephemPublicKey
-        bytes ciphertext; // ciphertext
-        bytes mac; // mac
-    }
-
     // Struct to store the encrypted data with the public key of the owner of the SBT
     struct SBTData {
         bytes root; // root of the Merkle Tree's data without encryption, used to verify the data
         // encrypted data with the public key of the owner of the SBT
-        EncryptedData encryptedCreditScore;
-        EncryptedData encryptedIncome;
-        EncryptedData encryptedReportDate;
+        bytes encryptedCreditScore;
+        bytes encryptedIncome;
+        bytes encryptedReportDate;
     }
 
     // tokenId => SBTData
@@ -75,9 +68,9 @@ contract ZKSBT is ERC4671, Ownable {
     function mint(
         address to,
         bytes calldata root,
-        EncryptedData calldata encryptedCreditScore,
-        EncryptedData calldata encryptedIncome,
-        EncryptedData calldata encryptedReportDate /* onlyOwner */
+        bytes calldata encryptedCreditScore,
+        bytes calldata encryptedIncome,
+        bytes calldata encryptedReportDate /* onlyOwner */
     ) external payable virtual returns (uint256) {
         uint256 tokenId = _mint(to);
 
@@ -111,15 +104,7 @@ contract ZKSBT is ERC4671, Ownable {
     /// @return The encrypted data with the public key of the owner of the SBT
     function getEncryptedData(
         uint256 tokenId
-    )
-        external
-        view
-        returns (
-            EncryptedData memory,
-            EncryptedData memory,
-            EncryptedData memory
-        )
-    {
+    ) external view returns (bytes memory, bytes memory, bytes memory) {
         return (
             sbtData[tokenId].encryptedCreditScore,
             sbtData[tokenId].encryptedIncome,
