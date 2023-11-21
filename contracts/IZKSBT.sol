@@ -16,9 +16,7 @@ interface IZKSBT {
 
     function verifyProof(
         uint256 tokenId,
-        uint256[2] memory a,
-        uint256[2][2] memory b,
-        uint256[2] memory c,
+        uint[] memory proof,
         uint256[] memory publicValues
     ) external view returns (bool);
 }

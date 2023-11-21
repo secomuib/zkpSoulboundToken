@@ -197,15 +197,8 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      expect(
-        await zkSBT.verifyProof(
-          tokenId,
-          proof.a,
-          proof.b,
-          proof.c,
-          proof.PubSignals
-        )
-      ).to.be.true;
+      expect(await zkSBT.verifyProof(tokenId, proof.Proof, proof.PubSignals)).to
+        .be.true;
     });
 
     it("proof with invalid creditScore will fail (incorrect merkle tree root)", async () => {
@@ -269,15 +262,8 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      expect(
-        await zkSBT.verifyProof(
-          tokenId,
-          proof.a,
-          proof.b,
-          proof.c,
-          proof.PubSignals
-        )
-      ).to.be.true;
+      expect(await zkSBT.verifyProof(tokenId, proof.Proof, proof.PubSignals)).to
+        .be.true;
     });
 
     it("proof with valid creditScore will fail (45==40)", async () => {
@@ -310,15 +296,8 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      expect(
-        await zkSBT.verifyProof(
-          tokenId,
-          proof.a,
-          proof.b,
-          proof.c,
-          proof.PubSignals
-        )
-      ).to.be.true;
+      expect(await zkSBT.verifyProof(tokenId, proof.Proof, proof.PubSignals)).to
+        .be.true;
     });
 
     it("proof with valid creditScore will fail (45!=45)", async () => {
@@ -351,15 +330,8 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      expect(
-        await zkSBT.verifyProof(
-          tokenId,
-          proof.a,
-          proof.b,
-          proof.c,
-          proof.PubSignals
-        )
-      ).to.be.true;
+      expect(await zkSBT.verifyProof(tokenId, proof.Proof, proof.PubSignals)).to
+        .be.true;
     });
 
     it("proof with valid creditScore will fail (45>45)", async () => {
@@ -407,15 +379,8 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      expect(
-        await zkSBT.verifyProof(
-          tokenId,
-          proof.a,
-          proof.b,
-          proof.c,
-          proof.PubSignals
-        )
-      ).to.be.true;
+      expect(await zkSBT.verifyProof(tokenId, proof.Proof, proof.PubSignals)).to
+        .be.true;
     });
 
     it("proof with valid creditScore will succeed (45>=45)", async () => {
@@ -433,15 +398,8 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      expect(
-        await zkSBT.verifyProof(
-          tokenId,
-          proof.a,
-          proof.b,
-          proof.c,
-          proof.PubSignals
-        )
-      ).to.be.true;
+      expect(await zkSBT.verifyProof(tokenId, proof.Proof, proof.PubSignals)).to
+        .be.true;
     });
 
     it("proof with invalid creditScore will fail (45>=50)", async () => {
@@ -474,15 +432,8 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      expect(
-        await zkSBT.verifyProof(
-          tokenId,
-          proof.a,
-          proof.b,
-          proof.c,
-          proof.PubSignals
-        )
-      ).to.be.true;
+      expect(await zkSBT.verifyProof(tokenId, proof.Proof, proof.PubSignals)).to
+        .be.true;
     });
 
     it("proof with valid creditScore will fail (45<45)", async () => {
@@ -530,15 +481,8 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      expect(
-        await zkSBT.verifyProof(
-          tokenId,
-          proof.a,
-          proof.b,
-          proof.c,
-          proof.PubSignals
-        )
-      ).to.be.true;
+      expect(await zkSBT.verifyProof(tokenId, proof.Proof, proof.PubSignals)).to
+        .be.true;
     });
 
     it("proof with valid creditScore will succeed (45<=45)", async () => {
@@ -556,15 +500,8 @@ describe("ZKP SBT", () => {
       const proof = await genProof(input);
 
       // check ZKP proof
-      expect(
-        await zkSBT.verifyProof(
-          tokenId,
-          proof.a,
-          proof.b,
-          proof.c,
-          proof.PubSignals
-        )
-      ).to.be.true;
+      expect(await zkSBT.verifyProof(tokenId, proof.Proof, proof.PubSignals)).to
+        .be.true;
     });
 
     it("proof with invalid creditScore will fail (45<=40)", async () => {
