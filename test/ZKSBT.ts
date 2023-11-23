@@ -180,6 +180,7 @@ describe("ZKP SBT", () => {
 
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 40,
@@ -216,6 +217,7 @@ describe("ZKP SBT", () => {
 
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 40,
@@ -250,6 +252,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will succeed (45==45)", async () => {
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 45,
@@ -269,6 +272,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will fail (45==40)", async () => {
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 40,
@@ -284,6 +288,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will succeed (45!=40)", async () => {
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 40,
@@ -303,6 +308,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will fail (45!=45)", async () => {
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 45,
@@ -318,6 +324,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will succeed (45>40)", async () => {
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 40,
@@ -337,6 +344,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will fail (45>45)", async () => {
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 45,
@@ -352,6 +360,7 @@ describe("ZKP SBT", () => {
     it("proof with invalid creditScore will fail (45>50)", async () => {
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 50,
@@ -367,6 +376,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will succeed (45>=40)", async () => {
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 40,
@@ -386,6 +396,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will succeed (45>=45)", async () => {
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 45,
@@ -405,6 +416,7 @@ describe("ZKP SBT", () => {
     it("proof with invalid creditScore will fail (45>=50)", async () => {
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 50,
@@ -420,6 +432,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will succeed (45<50)", async () => {
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 50,
@@ -439,6 +452,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will fail (45<45)", async () => {
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 45,
@@ -454,6 +468,7 @@ describe("ZKP SBT", () => {
     it("proof with invalid creditScore will fail (45<40)", async () => {
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 40,
@@ -469,6 +484,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will succeed (45<=50)", async () => {
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 50,
@@ -488,6 +504,7 @@ describe("ZKP SBT", () => {
     it("proof with valid creditScore will succeed (45<=45)", async () => {
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 45,
@@ -507,6 +524,7 @@ describe("ZKP SBT", () => {
     it("proof with invalid creditScore will fail (45<=40)", async () => {
       // input of ZKP
       const input = {
+        index: 1, // credit score
         root: storedRoot,
         owner: address1.address,
         threshold: 40,
