@@ -128,7 +128,7 @@ contract ZKSBT is IZKSBT, ERC4671, Ownable {
 
         require(
             ownerOf(tokenId) == owner,
-            "The SBT doesn't belong to the address that is trying to claim the loan"
+            "The SBT doesn't belong to the address stored in the ZK proof"
         );
 
         bytes memory root = getRoot(tokenId);
