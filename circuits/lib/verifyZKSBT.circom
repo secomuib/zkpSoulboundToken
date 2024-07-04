@@ -11,6 +11,8 @@ template verifyZKSBT(length) {
     signal input owner;     // address of the owner of the soulbound token
     signal input threshold; // threshold to compare with the value
     signal input operator;  // operator to compare the value with the threshold
+    signal input timestamp; // timestamp of the proof. do not take part in any computation,
+                            // but tie the proof to a specific timestamp to prevent replay attacks
     // 000: ==
     // 001: !=
     // 010: >
@@ -29,6 +31,8 @@ template verifyZKSBT(length) {
     assert(owner == data[0]);
     // check that the value is equal to the data at the index
     assert(value == data[index]);
+    // check that the timestamp is greater than zero
+    assert(timestamp > 0);
 
     // check merckle tree root of data to be equal to root public input
     component merkleTree = Poseidon(length);

@@ -7,4 +7,5 @@ include "lib/verifyZKSBT.circom";
 // owner: address of the owner of the soulbound token
 // theshold: threshold to compare with the value
 // operator: operator to compare the value with the threshold
-component main {public [index,root,owner,threshold,operator]} = verifyZKSBT(4);
+// timestamp: timestamp of the proof
+component main {public [index,root,owner,threshold,operator,timestamp]} = verifyZKSBT(4);
