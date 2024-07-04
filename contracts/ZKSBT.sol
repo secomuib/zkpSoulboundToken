@@ -11,7 +11,7 @@ interface IVerifier {
         uint[2] memory a,
         uint[2][2] memory b,
         uint[2] memory c,
-        uint[6] memory input
+        uint[7] memory input
     ) external view returns (bool);
 }
 
@@ -142,13 +142,14 @@ contract ZKSBT is IZKSBT, ERC4671, Ownable {
         uint[2] memory a = [proof[0], proof[1]];
         uint[2][2] memory b = [[proof[2], proof[3]], [proof[4], proof[5]]];
         uint[2] memory c = [proof[6], proof[7]];
-        uint[6] memory p = [
+        uint[7] memory p = [
             publicValues[0],
             publicValues[1],
             publicValues[2],
             publicValues[3],
             publicValues[4],
-            publicValues[5]
+            publicValues[5],
+            publicValues[6]
         ];
 
         // Verify the proof
