@@ -185,6 +185,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 40,
         operator: 3, // 3 = greater than or equal to
+        timestamp: 1675195348511,
         value: +decryptedCreditScore,
         data: [
           address1.address,
@@ -222,6 +223,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 40,
         operator: 3, // 3 = greater than or equal to
+        timestamp: 1675195348511,
         value: 55, // invalid credit score
         data: [address1.address, 55, income, reportDate]
       };
@@ -257,6 +259,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 45,
         operator: 0, // 0 = equal to
+        timestamp: 1675195348511,
         value: +creditScore,
         data: [address1.address, +creditScore, +income, +reportDate]
       };
@@ -277,6 +280,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 40,
         operator: 0, // 0 = equal to
+        timestamp: 1675195348511,
         value: +creditScore,
         data: [address1.address, +creditScore, +income, +reportDate]
       };
@@ -293,6 +297,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 40,
         operator: 1, // 1 = different than
+        timestamp: 1675195348511,
         value: +creditScore,
         data: [address1.address, +creditScore, +income, +reportDate]
       };
@@ -313,6 +318,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 45,
         operator: 1, // 1 = different than
+        timestamp: 1675195348511,
         value: +creditScore,
         data: [address1.address, +creditScore, +income, +reportDate]
       };
@@ -329,6 +335,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 40,
         operator: 2, // 2 = greater than
+        timestamp: 1675195348511,
         value: +creditScore,
         data: [address1.address, +creditScore, +income, +reportDate]
       };
@@ -349,6 +356,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 45,
         operator: 2, // 2 = greater than
+        timestamp: 1675195348511,
         value: +creditScore,
         data: [address1.address, +creditScore, +income, +reportDate]
       };
@@ -365,6 +373,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 50,
         operator: 2, // 2 = greater than
+        timestamp: 1675195348511,
         value: +creditScore,
         data: [address1.address, +creditScore, +income, +reportDate]
       };
@@ -381,6 +390,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 40,
         operator: 3, // 3 = greater than or equal to
+        timestamp: 1675195348511,
         value: +creditScore,
         data: [address1.address, +creditScore, +income, +reportDate]
       };
@@ -401,6 +411,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 45,
         operator: 3, // 3 = greater than or equal to
+        timestamp: 1675195348511,
         value: +creditScore,
         data: [address1.address, +creditScore, +income, +reportDate]
       };
@@ -421,6 +432,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 50,
         operator: 3, // 3 = greater than or equal to
+        timestamp: 1675195348511,
         value: +creditScore,
         data: [address1.address, +creditScore, +income, +reportDate]
       };
@@ -437,6 +449,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 50,
         operator: 4, // 4 = less than
+        timestamp: 1675195348511,
         value: +creditScore,
         data: [address1.address, +creditScore, +income, +reportDate]
       };
@@ -457,6 +470,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 45,
         operator: 4, // 4 = less than
+        timestamp: 1675195348511,
         value: +creditScore,
         data: [address1.address, +creditScore, +income, +reportDate]
       };
@@ -473,6 +487,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 40,
         operator: 4, // 4 = less than
+        timestamp: 1675195348511,
         value: +creditScore,
         data: [address1.address, +creditScore, +income, +reportDate]
       };
@@ -489,6 +504,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 50,
         operator: 5, // 5 = less than or equal to
+        timestamp: 1675195348511,
         value: +creditScore,
         data: [address1.address, +creditScore, +income, +reportDate]
       };
@@ -509,6 +525,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 45,
         operator: 5, // 5 = less than or equal to
+        timestamp: 1675195348511,
         value: +creditScore,
         data: [address1.address, +creditScore, +income, +reportDate]
       };
@@ -529,6 +546,7 @@ describe("ZKP SBT", () => {
         owner: address1.address,
         threshold: 40,
         operator: 5, // 5 = less than or equal to
+        timestamp: 1675195348511,
         value: +creditScore,
         data: [address1.address, +creditScore, +income, +reportDate]
       };
