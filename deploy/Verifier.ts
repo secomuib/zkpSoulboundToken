@@ -20,7 +20,7 @@ const func: DeployFunction = async ({
 
   const constructorArguments = [];
 
-  const verifierDeploymentResult = await deploy("Verifier", {
+  const verifierDeploymentResult = await deploy("Groth16Verifier", {
     from: deployer,
     args: constructorArguments,
     log: true
@@ -44,6 +44,6 @@ const func: DeployFunction = async ({
   }
 };
 
-func.tags = ["Verifier"];
+func.tags = ["Groth16Verifier"];
 func.dependencies = [];
 export default func;
