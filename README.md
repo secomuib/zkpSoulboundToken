@@ -113,6 +113,7 @@ Add the input in the file `input.json` file:
   "owner": "0x14B2Bab4d1068e742BAf05F908D7b5A00773B0dd",
   "threshold": 40,
   "operator": 3,
+  "timestamp": 1675195348511,
   "value": 45,
   "data": ["0x14B2Bab4d1068e742BAf05F908D7b5A00773B0dd", 45, 3100, 1675196581804]
 }
