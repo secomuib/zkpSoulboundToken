@@ -20,7 +20,7 @@ const func: DeployFunction = async ({
   [admin] = await ethers.getSigners();
   const env = getEnvParams();
 
-  const verifierDeployed = await deployments.get("Verifier");
+  const verifierDeployed = await deployments.get("Groth16Verifier");
 
   const constructorArguments = [
     env.ADMIN || admin.address,
@@ -54,5 +54,5 @@ const func: DeployFunction = async ({
 };
 
 func.tags = ["ZKSBT"];
-func.dependencies = ["Verifier"];
+func.dependencies = ["Groth16Verifier"];
 export default func;
