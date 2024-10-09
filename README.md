@@ -41,7 +41,7 @@ yarn deploy --network {network}
 
 ### Deployment addresses
 
-You can see the deployment address of the smart contracts in the [deployments/goerli](deployments/goerli) and [deployments/mainnet](deployments/mainnet) folders. For every deployed smart contract you will find a `<smart_contract>.json` JSON file with the address in the `"address"` field.
+You can see the deployment address of the smart contracts in the [deployments/sepolia](deployments/sepolia) and [deployments/mainnet](deployments/mainnet) folders. For every deployed smart contract you will find a `<smart_contract>.json` JSON file with the address in the `"address"` field.
 
 ## Gas cost
 

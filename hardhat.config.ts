@@ -23,9 +23,9 @@ const networks: NetworksUserConfig = {
     allowUnlimitedContractSize: true,
     gasPrice: "auto"
   },
-  goerli: {
-    url: getInfuraURL("goerli"),
-    chainId: 5,
+  sepolia: {
+    url: getInfuraURL("sepolia"),
+    chainId: 11155111,
     accounts: [getPrivateKey()]
   },
   mainnet: {
